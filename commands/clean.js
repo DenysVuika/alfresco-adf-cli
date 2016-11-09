@@ -29,6 +29,10 @@ function cleanPaths (paths, rootDir, n) {
         return;
     }
     let target = paths[n];
+
+    let relPath = path.relative(rootDir, target);
+    logInfo(`-> ${relPath}`);
+
     rimraf(target, (err) => {
         if (err) {
             logError(err);
@@ -38,17 +42,25 @@ function cleanPaths (paths, rootDir, n) {
 }
 
 module.exports = {
-    command: 'clean [dir]',
+    command: 'clean [path] [dir..]',
     desc: 'Clean project',
     builder: {
-        dir: {
+        path: {
             default: '.'
+        },
+        dir: {
+            default: []
         }
     },
     handler: function (argv) {
-        const projectDir = path.resolve(argv.dir);
+        const projectDir = path.resolve(argv.path);
         logInfo(`cleaning '${projectDir}'`);
-        cleanPaths(defaultPaths, projectDir, 0);
+
+        let dirs = argv.dir || [];
+        if (dirs.length === 0) {
+            dirs = defaultPaths.map(p => path.join(projectDir, p));
+        }
+        cleanPaths(dirs, projectDir, 0);
     }
 };
 
