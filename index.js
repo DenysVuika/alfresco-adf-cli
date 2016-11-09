@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+'use strict';
+
 require('yargs')
     .command(['start [app]', 'run', 'up'], 'Start up an app', {}, (argv) => {
         console.log('starting up the', argv.app || 'default', 'app');
@@ -12,7 +14,8 @@ require('yargs')
             console.log(`setting ${argv.key} to ${argv.value}`);
         }
     })
+    .commandDir('commands')
     .demand(1)
     .help()
-    .wrap(72)
+    .version()
     .argv;
