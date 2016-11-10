@@ -10,7 +10,7 @@ const FILES = [
     '.gitignore',
     '.npmignore',
     '.travis.yml',
-    '.tsconfig.json',
+    'tsconfig.json',
     'tslint.json'
 ];
 
