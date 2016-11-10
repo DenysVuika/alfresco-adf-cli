@@ -1,21 +1,8 @@
 const path = require('path');
-const chalk = require('chalk');
 const rimraf = require('rimraf');
+const logger = require('../util/logger');
 
-function logInfo (message) {
-    if (message) {
-        let prefix = chalk.green('clean');
-        console.log(`${prefix}: ${message}`);
-    }
-}
-
-function logError (message) {
-    if (message) {
-        let prefix = chalk.green('clean');
-        var error = chalk.bold.red;
-        console.log(`${prefix}: ${error(message)}`);
-    }
-}
+const COMMAND_NAME = 'clean';
 
 const defaultPaths = [
     'node_modules',
@@ -25,17 +12,17 @@ const defaultPaths = [
 
 function cleanPaths (paths, rootDir, n) {
     if (n >= paths.length) {
-        logInfo('cleaning finished');
+        logger.info(COMMAND_NAME, 'cleaning finished');
         return;
     }
     let target = paths[n];
 
     let relPath = path.relative(rootDir, target);
-    logInfo(`-> ${relPath}`);
+    logger.info(COMMAND_NAME, `-> ${relPath}`);
 
     rimraf(target, (err) => {
         if (err) {
-            logError(err);
+            logger.error(COMMAND_NAME, err);
         }
         cleanPaths(paths, rootDir, n + 1);
     });
@@ -54,7 +41,7 @@ module.exports = {
     },
     handler: function (argv) {
         const projectDir = path.resolve(argv.path);
-        logInfo(`cleaning '${projectDir}'`);
+        logger.info(COMMAND_NAME, `cleaning '${projectDir}'`);
 
         let dirs = argv.dir || [];
         if (dirs.length === 0) {
@@ -63,5 +50,3 @@ module.exports = {
         cleanPaths(dirs, projectDir, 0);
     }
 };
-
-

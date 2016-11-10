@@ -1,22 +1,9 @@
 const path = require('path');
 const fs = require('fs');
-const chalk = require('chalk');
 const Linter = require('tslint');
+const logger = require('../util/logger');
 
-function logInfo (message) {
-    if (message) {
-        let prefix = chalk.green('tslint');
-        console.log(`${prefix}: ${message}`);
-    }
-}
-
-function logError (message) {
-    if (message && message.trim()) {
-        let prefix = chalk.green('tslint');
-        var error = chalk.bold.red;
-        console.log(`${prefix}: ${error(message.trim())}`);
-    }
-}
+const COMMAND_NAME = 'tslint';
 
 function logFailures (failures, rootPath) {
     failures = failures || [];
@@ -28,7 +15,7 @@ function logFailures (failures, rootPath) {
         let failureString = failure.getFailure();
         let lineAndCharacter = failure.getStartPosition().getLineAndCharacter();
         let position = `[${lineAndCharacter.line + 1}, ${lineAndCharacter.character + 1}]`;
-        logError(`${fileName}${position}: ${failureString}`);
+        logger.error(COMMAND_NAME, `${fileName}${position}: ${failureString}`);
     });
 }
 
@@ -42,10 +29,10 @@ module.exports = {
     },
     handler: function (argv) {
         const projectDir = path.resolve(argv.dir);
-        logInfo(projectDir);
+        logger.info(COMMAND_NAME, projectDir);
         process.chdir(projectDir);
 
-        const rulesFile = path.join(__dirname, 'tslint/tslint.json');
+        const rulesFile = path.join(__dirname, '.tslint/tslint.json');
         const configPath = path.join(projectDir, 'tsconfig.json');
 
         fs.stat(configPath, (err, stats) => {
@@ -54,7 +41,7 @@ module.exports = {
                 if (err.code === 'ENOENT') {
                     message = 'tsconfig.json file not found';
                 }
-                logError(message);
+                logger.error(COMMAND_NAME, message);
                 process.exit(1);
                 return;
             }
@@ -89,10 +76,10 @@ module.exports = {
                 if (hasFailures) {
                     process.exit(1);
                 } else {
-                    logInfo('linting complete');
+                    logger.info(COMMAND_NAME, 'linting complete');
                 }
             } else {
-                logError('tsconfig.json file not found');
+                logger.error(COMMAND_NAME, 'tsconfig.json file not found');
             }
         });
     }
