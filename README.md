@@ -8,11 +8,18 @@ Command line tools for Alfresco ADF
 - init
 - tslint
 - clean
+- serve
 - version
 
 ## help
 
-`adf --help`
+`--help [command]`
+
+Examples:
+```sh
+adf --help
+adf --help serve
+```
 
 ## init
 
@@ -48,6 +55,23 @@ adf clean project/folder
 adf clean . folder1 folder2
 ```
 
+## serve
+
+`serve [path]`
+
+Examples:
+```sh
+adf serve .
+adf serve --open
+```
+
+For more information see internal help: `adf --help serve`.
+
 ## version
 
-`adf --version`
+Shows program version number.
+
+Examples:
+```sh
+adf --version
+```

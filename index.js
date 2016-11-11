@@ -18,4 +18,5 @@ require('yargs')
     .demand(1)
     .help()
     .version()
+    .wrap(100)
     .argv;
