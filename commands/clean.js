@@ -1,52 +1,60 @@
 const path = require('path');
 const rimraf = require('rimraf');
-const logger = require('../util/logger');
+const Logger = require('../util/logger');
 
-const COMMAND_NAME = 'clean';
+class CleanCommand {
 
-const defaultPaths = [
-    'node_modules',
-    'dist',
-    'typings'
-];
+    constructor() {
+        this.logger = new Logger('clean');
+        this.command = 'clean [path] [dir..]';
+        this.desc = 'Clean project';
+        this.builder = {
+            path: {
+                describe: 'Sets working directory.',
+                type: 'string',
+                default: '.'
+            },
+            dir: {
+                default: []
+            }
+        };
+        this.handler = this.handler.bind(this);
 
-function cleanPaths (paths, rootDir, n) {
-    if (n >= paths.length) {
-        logger.info(COMMAND_NAME, 'cleaning finished');
-        return;
+        this.defaultPaths = [
+            'node_modules',
+            'dist',
+            'typings'
+        ];
     }
-    let target = paths[n];
 
-    let relPath = path.relative(rootDir, target);
-    logger.info(COMMAND_NAME, `-> ${relPath}`);
-
-    rimraf(target, (err) => {
-        if (err) {
-            logger.error(COMMAND_NAME, err);
-        }
-        cleanPaths(paths, rootDir, n + 1);
-    });
-}
-
-module.exports = {
-    command: 'clean [path] [dir..]',
-    desc: 'Clean project',
-    builder: {
-        path: {
-            default: '.'
-        },
-        dir: {
-            default: []
-        }
-    },
-    handler: function (argv) {
+    handler(argv) {
         const projectDir = path.resolve(argv.path);
-        logger.info(COMMAND_NAME, `cleaning '${projectDir}'`);
+        this.logger.info(`cleaning '${projectDir}'`);
 
         let dirs = argv.dir || [];
         if (dirs.length === 0) {
-            dirs = defaultPaths.map(p => path.join(projectDir, p));
+            dirs = this.defaultPaths.map(p => path.join(projectDir, p));
         }
-        cleanPaths(dirs, projectDir, 0);
+        this.cleanPaths(dirs, projectDir, 0);
     }
-};
+
+    cleanPaths(paths, rootDir, n) {
+        if (n >= paths.length) {
+            this.logger.info('cleaning finished');
+            return;
+        }
+        let target = paths[n];
+
+        let relPath = path.relative(rootDir, target);
+        this.logger.info(`-> ${relPath}`);
+
+        rimraf(target, (err) => {
+            if (err) {
+                this.logger.error(err);
+            }
+            this.cleanPaths(paths, rootDir, n + 1);
+        });
+    }
+}
+
+module.exports = new CleanCommand();

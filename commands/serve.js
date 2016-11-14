@@ -1,12 +1,13 @@
 const path = require('path');
-const logger = require('../util/logger');
+const Logger = require('../util/logger');
 
 class ServeCommand {
 
-    constructor () {
+    constructor() {
         this.commandName = 'serve';
         this.command = 'serve [dir]';
         this.desc = 'Serve web app';
+        this.logger = new Logger('serve');
         this.builder = {
             a: {
                 alias: 'address',
@@ -79,9 +80,9 @@ class ServeCommand {
         this.handler = this.handler.bind(this);
     }
 
-    handler (argv) {
+    handler(argv) {
         const projectDir = path.resolve(argv.dir);
-        logger.info(this.commandName, projectDir);
+        this.logger.info(this.commandName, projectDir);
         process.chdir(projectDir);
 
         let config = {

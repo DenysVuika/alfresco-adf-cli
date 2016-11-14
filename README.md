@@ -2,6 +2,18 @@
 
 Command line tools for Alfresco ADF
 
+## Installing
+
+```sh
+npm install -g alfresco-adf-cli
+```
+
+Alternatively you can install as part of your project:
+
+```sh
+npm install --save-dev alfresco-adf-cli
+```
+
 ## Commands
 
 - help

@@ -4,10 +4,12 @@
         "standard"
     ],
     "env": {
-        "mocha": true
+        "mocha": true,
+        "es6": true
     },
     "rules": {
         "semi": ["error", "always"],
-        "indent": ["error", 4, { "SwitchCase": 1 }]
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "space-before-function-paren": ["error", "never"]
     }
 }

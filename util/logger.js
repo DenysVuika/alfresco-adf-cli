@@ -2,16 +2,20 @@ const chalk = require('chalk');
 
 class Logger {
 
-    info (prefix, message) {
+    constructor (prefix) {
+        this.prefix = prefix || 'adf';
+    }
+
+    info (message) {
         if (message) {
-            let header = chalk.green(prefix);
+            let header = chalk.green(this.prefix);
             console.log(`${header}: ${message}`);
         }
     }
 
-    error (prefix, message) {
+    error (message) {
         if (message) {
-            let header = chalk.green(prefix);
+            let header = chalk.green(this.prefix);
             let error = chalk.bold.red;
             console.log(`${header}: ${error(message)}`);
         }
@@ -19,4 +23,4 @@ class Logger {
 
 }
 
-module.exports = new Logger();
+module.exports = Logger;

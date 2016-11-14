@@ -1,35 +1,27 @@
 const path = require('path');
 const fs = require('fs');
 const Linter = require('tslint');
-const logger = require('../util/logger');
+const Logger = require('../util/logger');
 
-const COMMAND_NAME = 'tslint';
+class TslintCommand {
 
-function logFailures (failures, rootPath) {
-    failures = failures || [];
-    failures.forEach(failure => {
-        let fileName = failure.getFileName();
-        if (rootPath) {
-            fileName = path.relative(rootPath, fileName);
-        }
-        let failureString = failure.getFailure();
-        let lineAndCharacter = failure.getStartPosition().getLineAndCharacter();
-        let position = `[${lineAndCharacter.line + 1}, ${lineAndCharacter.character + 1}]`;
-        logger.error(COMMAND_NAME, `${fileName}${position}: ${failureString}`);
-    });
-}
+    constructor() {
+        this.logger = new Logger('tslint');
+        this.command = 'tslint [dir]';
+        this.desc = 'Run TSLint for a given directory';
+        this.handler = this.handler.bind(this);
+        this.builder = {
+            dir: {
+                describe: 'Sets working directory.',
+                type: 'string',
+                default: '.'
+            }
+        };
+    }
 
-module.exports = {
-    command: 'tslint [dir]',
-    desc: 'Run TSLint for a given directory',
-    builder: {
-        dir: {
-            default: '.'
-        }
-    },
-    handler: function (argv) {
+    handler(argv) {
         const projectDir = path.resolve(argv.dir);
-        logger.info(COMMAND_NAME, projectDir);
+        this.logger.info(projectDir);
         process.chdir(projectDir);
 
         const rulesFile = path.join(__dirname, '.tslint/tslint.json');
@@ -41,7 +33,7 @@ module.exports = {
                 if (err.code === 'ENOENT') {
                     message = 'tsconfig.json file not found';
                 }
-                logger.error(COMMAND_NAME, message);
+                this.logger.error(message);
                 process.exit(1);
                 return;
             }
@@ -69,18 +61,34 @@ module.exports = {
                     results.forEach(r => {
                         if (r.failureCount > 0) {
                             hasFailures = true;
-                            logFailures(r.failures, projectDir);
+                            this.logFailures(r.failures, projectDir);
                         }
                     });
                 }
                 if (hasFailures) {
                     process.exit(1);
                 } else {
-                    logger.info(COMMAND_NAME, 'linting complete');
+                    this.logger.info('linting complete');
                 }
             } else {
-                logger.error(COMMAND_NAME, 'tsconfig.json file not found');
+                this.logger.error('tsconfig.json file not found');
             }
         });
     }
-};
+
+    logFailures(failures, rootPath) {
+        failures = failures || [];
+        failures.forEach(failure => {
+            let fileName = failure.getFileName();
+            if (rootPath) {
+                fileName = path.relative(rootPath, fileName);
+            }
+            let failureString = failure.getFailure();
+            let lineAndCharacter = failure.getStartPosition().getLineAndCharacter();
+            let position = `[${lineAndCharacter.line + 1}, ${lineAndCharacter.character + 1}]`;
+            this.logger.error(`${fileName}${position}: ${failureString}`);
+        });
+    }
+}
+
+module.exports = new TslintCommand();
