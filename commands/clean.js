@@ -1,5 +1,5 @@
 const path = require('path');
-const rimraf = require('rimraf');
+const fs = require('fs-extra');
 const Logger = require('../util/logger');
 
 class CleanCommand {
@@ -48,7 +48,7 @@ class CleanCommand {
         let relPath = path.relative(rootDir, target);
         this.logger.info(`-> ${relPath}`);
 
-        rimraf(target, (err) => {
+        fs.remove(target, (err) => {
             if (err) {
                 this.logger.error(err);
             }

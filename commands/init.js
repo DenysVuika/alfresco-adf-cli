@@ -1,5 +1,5 @@
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 const Logger = require('../util/logger');
 
 class InitCommand {
@@ -7,60 +7,54 @@ class InitCommand {
     constructor() {
         this.logger = new Logger('init');
         this.command = 'init [dir]';
-        this.desc = 'Init ADF project';
+        this.desc = 'Setup new ADF project';
         this.builder = {
             dir: {
-                describe: 'Sets working directory.',
+                describe: 'Working directory',
                 type: 'string',
                 default: '.'
             }
         };
         this.handler = this.handler.bind(this);
-
-        this.files = [
-            '.editorconfig',
-            '.eslintrc.json',
-            '.gitignore',
-            '.npmignore',
-            '.travis.yml',
-            'tsconfig.json',
-            'tslint.json'
-        ];
     }
 
     handler(argv) {
         const projectDir = path.resolve(argv.dir);
-        this.logger.info(`configuring ${projectDir}`);
+        this.logger.info(`Configuring ${projectDir}`);
 
-        Promise.all(this.files.map(f => this.copyFile(f, projectDir)))
-            .then(results => this.logger.info('setup complete'))
-            .catch(err => console.log(err));
+        let items = [];
+        const sourceDir = path.join(__dirname, '.init');
+        fs.walk(sourceDir)
+            .on('data', (item) => {
+                if (item.path !== sourceDir && item.stats.isFile()) {
+                    items.push(item.path);
+                }
+            })
+            .on('end', () => {
+                this.logger.info('Writing files...');
+
+                Promise.all(items.map(sourcePath => {
+                    let relativePath = path.relative(sourceDir, sourcePath);
+                    let targetPath = path.join(projectDir, relativePath);
+                    return this.copyFile(sourcePath, targetPath, relativePath);
+                }))
+                .then(results => this.logger.info('setup complete'))
+                .catch(err => console.log(err));
+            });
     }
 
-    copyFile(fileName, targetDir) {
+    copyFile(sourcePath, targetPath, relativePath) {
         return new Promise((resolve, reject) => {
-            const inputPath = path.join(__dirname, `.init/${fileName}`);
-            const outputPath = path.join(targetDir, fileName);
-
-            fs.readFile(inputPath, (err, data) => {
+            fs.copy(sourcePath, targetPath, (err) => {
                 if (err) {
                     this.logger.error(err);
-                    reject(err);
-                    return;
+                    return reject(err);
                 }
-                fs.writeFile(outputPath, data, (err) => {
-                    if (err) {
-                        this.logger.error(err);
-                        reject(err);
-                        return;
-                    }
-                    this.logger.info(`-> ${fileName}`);
-                    resolve(fileName);
-                });
+                // this.logger.info(`-> ${relativePath}`);
+                return resolve(targetPath);
             });
         });
     }
-
 }
 
 module.exports = new InitCommand();
