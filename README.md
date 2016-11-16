@@ -20,6 +20,7 @@ npm install --save-dev alfresco-adf-cli
 - init
 - tslint
 - clean
+- remove
 - serve
 - version
 
@@ -65,6 +66,19 @@ adf clean
 adf clean .
 adf clean project/folder
 adf clean . folder1 folder2
+```
+
+## remove
+
+Removes a file or directory. The directory can have contents. 
+
+`remove [path...] `
+
+Examples:
+```sh
+adf remove test1
+adf remove test1 test2 test3
+adf remove test*
 ```
 
 ## serve
