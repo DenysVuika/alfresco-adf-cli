@@ -47,6 +47,9 @@ adf init project/folder
 
 ## tslint
 
+Runs TSlint for a given project directory using embedded rules.  
+Your project does not need to have `tslint.json` installed however `tsconfig.json` is required.
+
 `tslint [dir]`
 
 Examples:
@@ -58,14 +61,21 @@ adf tslint project/folder
 
 ## clean
 
+Cleans the project directory.  
+Automatically removes the following subdirectories:
+
+- node_modules/
+- dist/
+- typings/
+
 `clean [path] [dir..]`
 
 Examples:
 ```sh
 adf clean
 adf clean .
-adf clean project/folder
-adf clean . folder1 folder2
+adf clean project1 project2 project3
+adf clean project*
 ```
 
 ## remove

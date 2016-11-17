@@ -6,15 +6,12 @@ class CleanCommand {
 
     constructor() {
         this.logger = new Logger('clean');
-        this.command = 'clean [path] [dir..]';
+        this.command = 'clean [dir..]';
         this.desc = 'Clean project';
         this.builder = {
-            path: {
-                describe: 'Sets working directory.',
-                type: 'string',
-                default: '.'
-            },
             dir: {
+                describe: 'Project directory',
+                type: 'array',
                 default: []
             }
         };
@@ -28,31 +25,38 @@ class CleanCommand {
     }
 
     handler(argv) {
-        const projectDir = path.resolve(argv.path);
-        this.logger.info(`cleaning '${projectDir}'`);
-
         let dirs = argv.dir || [];
+
         if (dirs.length === 0) {
-            dirs = this.defaultPaths.map(p => path.join(projectDir, p));
+            dirs.push('.');
         }
-        this.cleanPaths(dirs, projectDir, 0);
+
+        let paths = [];
+
+        dirs.forEach((d) => {
+            let projectDir = path.resolve(d);
+            this.defaultPaths.forEach(p => {
+                paths.push(path.join(projectDir, p));
+            });
+        });
+
+        this.logger.info('Cleaning projects...');
+        // console.dir(paths);
+        this.remove(paths, 0);
     }
 
-    cleanPaths(paths, rootDir, n) {
+    remove(paths, n) {
         if (n >= paths.length) {
-            this.logger.info('cleaning finished');
+            this.logger.info('Done');
             return;
         }
         let target = paths[n];
-
-        let relPath = path.relative(rootDir, target);
-        this.logger.info(`-> ${relPath}`);
 
         fs.remove(target, (err) => {
             if (err) {
                 this.logger.error(err);
             }
-            this.cleanPaths(paths, rootDir, n + 1);
+            this.remove(paths, n + 1);
         });
     }
 }

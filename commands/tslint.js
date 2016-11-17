@@ -8,11 +8,11 @@ class TslintCommand {
     constructor() {
         this.logger = new Logger('tslint');
         this.command = 'tslint [dir]';
-        this.desc = 'Run TSLint for a given directory';
+        this.desc = 'Run TSLint for a given project directory';
         this.handler = this.handler.bind(this);
         this.builder = {
             dir: {
-                describe: 'Sets working directory.',
+                describe: 'Working directory',
                 type: 'string',
                 default: '.'
             }
