@@ -26,6 +26,8 @@ npm install --save-dev alfresco-adf-cli
 
 ## help
 
+Shows general help information or help details for a given command.
+
 `--help [command]`
 
 Examples:
@@ -36,6 +38,8 @@ adf --help serve
 
 ## init
 
+Setup default project.
+
 `init [dir]`
 
 Examples:
@@ -45,10 +49,19 @@ adf init .
 adf init project/folder
 ```
 
+Puts the following files into target directory:
+
+- .editorconfig
+- .eslintrc.json
+- .gitignore
+- .npmignore
+- .travis.yml
+- .tsconfig.json
+- .tslint.json 
+
 ## tslint
 
-Runs TSlint for a given project directory using embedded rules.  
-Your project does not need to have `tslint.json` installed however `tsconfig.json` is required.
+Runs TSlint for a given project directory using embedded rules.
 
 `tslint [dir]`
 
@@ -59,14 +72,12 @@ adf tslint .
 adf tslint project/folder
 ```
 
+Your project does not need to have `tslint.json` installed however `tsconfig.json` is required.
+
+
 ## clean
 
-Cleans the project directory.  
-Automatically removes the following subdirectories:
-
-- node_modules/
-- dist/
-- typings/
+Cleans the project directory.
 
 `clean [path] [dir..]`
 
@@ -77,6 +88,12 @@ adf clean .
 adf clean project1 project2 project3
 adf clean project*
 ```
+
+Automatically removes the following subdirectories:
+
+- node_modules/
+- dist/
+- typings/
 
 ## remove
 
