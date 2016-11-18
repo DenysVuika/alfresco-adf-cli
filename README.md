@@ -22,6 +22,8 @@ npm install --save-dev alfresco-adf-cli
 - clean
 - remove
 - serve
+- check
+    * license
 - version
 
 ## help
@@ -119,6 +121,41 @@ adf serve --open
 ```
 
 For more information see internal help: `adf --help serve`.
+
+## check
+
+For more details on commands refer to inline help:
+
+```sh
+adf help check
+```
+
+Supported sub-commands:
+
+- license
+
+### license
+
+Runs license header check for a given folder(s).
+
+`adf check license [dir] [pattern] [ignore]`
+
+For more details refer to inline help:
+
+```sh
+adf help check license
+```
+
+Examples:
+```sh
+adf check license
+adf check license project1/
+adf check license --pattern '**/*.ts'
+adf check license --pattern '**/*.js' '**/!(index).ts' --ignore '**/*.d.ts'
+```
+
+_This command does not load full content of a file during check 
+and uses streaming to minimise memory footprint._
 
 ## version
 

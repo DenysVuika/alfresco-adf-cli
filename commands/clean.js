@@ -40,7 +40,7 @@ class CleanCommand {
             });
         });
 
-        this.logger.info('Cleaning projects...');
+        this.logger.info('Cleaning...');
         // console.dir(paths);
         this.remove(paths, 0);
     }
