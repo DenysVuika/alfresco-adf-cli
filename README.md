@@ -22,6 +22,7 @@ npm install --save-dev alfresco-adf-cli
 - clean
 - remove
 - serve
+- test
 - check
     * license
 - version
@@ -121,6 +122,30 @@ adf serve --open
 ```
 
 For more information see internal help: `adf --help serve`.
+
+## test
+
+Runs unit tests for a given project folder(s).
+
+`adf test [dir]`
+
+Exasmples:
+```sh
+adf test
+adf test project1
+``` 
+
+Uses Karma test runner with Jasmine for tests by default.  
+The following libraries are bundled so you don't need installing them for your project:
+
+- jasmine-core
+- karma
+- karma-chrome-launcher
+- karma-coverage
+- karma-jasmine
+- karma-jasmine-ajax
+- karma-jasmine-html-reporter
+- karma-mocha-reporter
 
 ## check
 
