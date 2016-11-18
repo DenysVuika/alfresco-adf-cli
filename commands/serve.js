@@ -49,7 +49,7 @@ class ServeCommand {
                 alias: 'livereload',
                 describe: 'Enable live reload support.',
                 type: 'boolean',
-                default: true
+                default: false
             },
             w: {
                 alias: 'watch',
@@ -88,7 +88,7 @@ class ServeCommand {
         let config = {
             host: argv.address,
             port: argv.port,
-            dir: argv.dir,
+            dir: projectDir,
             spa: argv.spa,
             open: argv.open,
             openUrl: argv.openUrl,

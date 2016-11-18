@@ -24,6 +24,7 @@
     "karma-jasmine-ajax": "^0.1.13",
     "karma-jasmine-html-reporter": "^0.2.2",
     "karma-mocha-reporter": "^2.2.1",
+    "remap-istanbul": "^0.7.0",
     "tslint": "^3.15.1",
     "typescript": "^2.0.8",
     "wsrv": "0.1.6",
