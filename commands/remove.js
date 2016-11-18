@@ -6,7 +6,7 @@ class RemoveCommand {
 
     constructor() {
         this.logger = new Logger('remove');
-        this.command = 'remove [path...]';
+        this.command = 'remove [path..]';
         this.desc = 'Removes a file or directory.';
         this.builder = {
             path: {

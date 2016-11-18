@@ -14,6 +14,14 @@ Alternatively you can install as part of your project:
 npm install --save-dev alfresco-adf-cli
 ```
 
+### Using with Travis CI
+
+**.travis.yml**
+```yml
+before_install:
+- npm install -g alfresco-adf-cli
+```
+
 ## Commands
 
 - help
@@ -82,7 +90,7 @@ Your project does not need to have `tslint.json` installed however `tsconfig.jso
 
 Cleans the project directory.
 
-`clean [path] [dir..]`
+`clean [dir..]`
 
 Examples:
 ```sh
@@ -102,7 +110,7 @@ Automatically removes the following subdirectories:
 
 Removes a file or directory. The directory can have contents. 
 
-`remove [path...] `
+`remove [path..] `
 
 Examples:
 ```sh
