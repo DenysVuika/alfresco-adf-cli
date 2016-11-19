@@ -45,6 +45,7 @@ Examples:
 ```sh
 adf --help
 adf --help serve
+adf help test
 ```
 
 ## init
@@ -70,6 +71,8 @@ Puts the following files into target directory:
 - .tsconfig.json
 - .tslint.json 
 
+For more information see internal help: `adf help init`.
+
 ## tslint
 
 Runs TSlint for a given project directory using embedded rules.
@@ -85,6 +88,7 @@ adf tslint project/folder
 
 Your project does not need to have `tslint.json` installed however `tsconfig.json` is required.
 
+For more information see internal help: `adf help tslint`.
 
 ## clean
 
@@ -105,6 +109,9 @@ Automatically removes the following subdirectories:
 - node_modules/
 - dist/
 - typings/
+- coverage/
+
+For more information see internal help: `adf help clean`.
 
 ## remove
 
@@ -119,6 +126,8 @@ adf remove test1 test2 test3
 adf remove test*
 ```
 
+For more information see internal help: `adf help remove`.
+
 ## serve
 
 `serve [path]`
@@ -129,18 +138,20 @@ adf serve .
 adf serve --open
 ```
 
-For more information see internal help: `adf --help serve`.
+For more information see internal help: `adf help serve`.
 
 ## test
 
-Runs unit tests for a given project folder(s).
+Runs unit tests for a given project folder(s).  
+Allows generating and opening coverage reports.
 
-`adf test [dir]`
+`adf test [dir] [coverage] [open]`
 
 Exasmples:
 ```sh
 adf test
 adf test project1
+adf test --coverage --open
 ``` 
 
 Uses Karma test runner with Jasmine for tests by default.  
@@ -154,6 +165,9 @@ The following libraries are bundled so you don't need installing them for your p
 - karma-jasmine-ajax
 - karma-jasmine-html-reporter
 - karma-mocha-reporter
+- remap-istanbul
+
+For more information see internal help: `adf help test`.
 
 ## check
 

@@ -20,7 +20,8 @@ class CleanCommand {
         this.defaultPaths = [
             'node_modules',
             'dist',
-            'typings'
+            'typings',
+            'coverage'
         ];
     }
 

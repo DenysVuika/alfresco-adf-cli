@@ -5,17 +5,23 @@ class TestCommand {
 
     constructor() {
         this.logger = new Logger('test');
-        this.command = 'test [dir] [coverage]';
+        this.command = 'test [dir] [coverage] [open]';
         this.desc = 'Run tests for a given project directory';
         this.builder = {
             dir: {
-                describe: 'Working directory',
+                describe: 'Working directory containing Karma config',
                 type: 'string',
                 default: '.'
             },
             coverage: {
                 alias: 'c',
-                describe: 'Run code coverage report',
+                describe: 'Generate coverage report',
+                type: 'boolean',
+                default: false
+            },
+            open: {
+                alias: 'o',
+                describe: 'Open coverage report in default browser',
                 type: 'boolean',
                 default: false
             }
@@ -38,7 +44,11 @@ class TestCommand {
                 this.logger.info('Running coverage');
                 this.runCoverage(projectDir).then(() => {
                     this.logger.info('Done.');
-                    process.exit(exitCode);
+                    if (argv.open) {
+                        this.openReport(projectDir);
+                    } else {
+                        process.exit(exitCode);
+                    }
                 });
             } else {
                 // this.logger.info(`Karma has exited with ${exitCode}`);
@@ -59,6 +69,19 @@ class TestCommand {
             'json': path.join(reportDir, 'coverage-final.json'),
             'html': path.join(reportDir, 'html-report')
         });
+    }
+
+    openReport(projectDir) {
+        this.logger.info('Opening report...');
+        const Server = require('wsrv');
+        const reportDir = path.join(projectDir, 'coverage/report/html-report');
+
+        let config = {
+            dir: reportDir,
+            open: true,
+            port: 9875
+        };
+        new Server(config).start();
     }
 
 }
