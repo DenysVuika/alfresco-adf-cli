@@ -13,6 +13,11 @@ class CleanCommand {
                 describe: 'Project directory',
                 type: 'array',
                 default: []
+            },
+            verbose: {
+                describe: 'Show details',
+                type: 'boolean',
+                default: false
             }
         };
         this.handler = this.handler.bind(this);
@@ -43,21 +48,24 @@ class CleanCommand {
 
         this.logger.info('Cleaning...');
         // console.dir(paths);
-        this.remove(paths, 0);
+        this.remove(paths, 0, argv.verbose);
     }
 
-    remove(paths, n) {
+    remove(paths, n, verbose) {
         if (n >= paths.length) {
             this.logger.info('Done');
             return;
         }
         let target = paths[n];
+        if (verbose) {
+            this.logger.info(`Removing: ${target}`);
+        }
 
         fs.remove(target, (err) => {
             if (err) {
                 this.logger.error(err);
             }
-            this.remove(paths, n + 1);
+            this.remove(paths, n + 1, verbose);
         });
     }
 }
