@@ -5,7 +5,7 @@ class TestCommand {
 
     constructor() {
         this.logger = new Logger('test');
-        this.command = 'test [dir] [coverage] [open]';
+        this.command = 'test [dir]';
         this.desc = 'Run tests for a given project directory';
         this.builder = {
             dir: {
@@ -24,6 +24,11 @@ class TestCommand {
                 describe: 'Open coverage report in default browser',
                 type: 'boolean',
                 default: false
+            },
+            keep: {
+                describe: 'Keep server running',
+                type: 'boolean',
+                default: false
             }
         };
         this.handler = this.handler.bind(this);
@@ -38,7 +43,7 @@ class TestCommand {
         const Server = require('karma').Server;
         const server = new Server({
             configFile: configFile,
-            singleRun: true
+            singleRun: !argv.keep
         }, (exitCode) => {
             if (argv.coverage) {
                 this.logger.info('Running coverage');
